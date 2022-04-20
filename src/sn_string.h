@@ -78,12 +78,11 @@ String_FormatArgList(Buffer buffer, char* format, va_list arg_list)
                 }
                 
                 umm largest_place = 1;
-                for (umm cpy = num / 10; cpy != 0; cpy /= 10) ++largest_place;
+                for (umm cpy = num / 10; cpy != 0; cpy /= 10) largest_place *= 10;
                 
                 while (largest_place != 0)
                 {
-                    if (req_chars < buffer.size) buffer.data[req_chars] = (u8)(num % largest_place);
-                    num           -= num % largest_place;
+                    if (req_chars < buffer.size) buffer.data[req_chars] = (u8)((num / largest_place) % 10 + '0');
                     largest_place /= 10;
                     req_chars     += 1;
                 }
@@ -101,7 +100,9 @@ String_FormatArgList(Buffer buffer, char* format, va_list arg_list)
                 do
                 {
                     char c = num % 16;
-                    if (c >= 10) c = (c - 10) + 'A';
+                    if (c >= 10) c  = (c - 10) + 'A';
+                    else         c += '0';
+                    
                     if (req_chars < buffer.size) buffer.data[req_chars] = c;
                     req_chars += 1;
                     num       /= 16;

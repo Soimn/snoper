@@ -267,11 +267,11 @@ WinMainCRTStartup()
                 {
                     /// Reload code if necessary
                     Win32_File_Timestamp code_timestamp;
-                    //if (Win32_GetFileTimestamp(code_path, &code_timestamp) &&
-                    //!MemMatch(&code_timestamp, &code.timestamp, sizeof(Win32_File_Timestamp)))
+                    if (Win32_GetFileTimestamp(code_path, &code_timestamp) &&
+                        !MemMatch(&code_timestamp, &code.timestamp, sizeof(Win32_File_Timestamp)))
                     {
                         Win32_TryLoadCode(&code, code_path, loaded_code_path_odd, loaded_code_path_even);
-                        //Win32_Print("Successfully reloaded code\n");
+                        Win32_Print("Successfully reloaded code\n");
                     }
                     
                     MSG msg;
@@ -293,7 +293,7 @@ WinMainCRTStartup()
                     LARGE_INTEGER end_time;
                     QueryPerformanceCounter(&end_time);
                     
-                    //Win32_Print("frame time: %ums\n", (u32)(1000 * (f32)(end_time.QuadPart - flip_time.QuadPart) / perf_freq.QuadPart));
+                    Win32_Print("frame time: %ums\n", (u32)(1000 * (f32)(end_time.QuadPart - flip_time.QuadPart) / perf_freq.QuadPart));
                     
                     flip_time = end_time;
                 }
