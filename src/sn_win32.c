@@ -13,6 +13,8 @@
 #undef near
 
 #include "sn_platform.h"
+#include "sn_win32_renderer_gl.h"
+#include "sn_win32_renderer.h"
 
 typedef struct Win32_File_Timestamp
 {
@@ -249,6 +251,16 @@ WinMainCRTStartup()
                 }
             }
             
+            /// Setup renderer
+            Win32_Renderer_State renderer_state = {0};
+            if (!setup_failed)
+            {
+                if (!Win32_SetupRenderer(&renderer_state, instance, window_handle))
+                {
+                    setup_failed = true;
+                }
+            }
+            
             if (!setup_failed)
             {
                 ShowWindow(window_handle, SW_SHOW);
@@ -287,7 +299,10 @@ WinMainCRTStartup()
                     }
                     
                     Platform_Input input = {0};
+                    
+                    renderer_state.BeginFrame();
                     code.tick(Platform, input);
+                    renderer_state.EndFrame();
                     
                     /// End of frame cleanup
                     LARGE_INTEGER end_time;
@@ -300,6 +315,7 @@ WinMainCRTStartup()
                 
                 timeEndPeriod(1);
                 
+                FreeLibrary(code.handle);
                 DeleteFile(loaded_code_path_odd);
                 DeleteFile(loaded_code_path_even);
             }

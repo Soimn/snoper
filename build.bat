@@ -38,13 +38,13 @@ set "compile_options= %nocrt_options% %diag_options% /O2 /Zo /Zf /Z7"
 set "link_options= /INCREMENTAL:NO /opt:ref /STACK:0x100000,0x100000 /NODEFAULTLIB /SUBSYSTEM:windows"
 
 IF /I "%main%" EQU "1" (
-	cl %compile_options% ..\src\sn_win32.c /link %link_options% /PDB:snoper.pdb /ENTRY:WinMainCRTStartup Kernel32.lib Winmm.lib User32.lib Gdi32.lib /out:snoper.exe
+	cl %compile_options% ..\src\sn_win32.c /link %link_options% /PDB:snoper.pdb /ENTRY:WinMainCRTStartup Kernel32.lib Winmm.lib User32.lib Gdi32.lib opengl32.lib /out:snoper.exe
 	del sn_win32.obj
 	copy snoper.exe ..\run_path\.
 	copy snoper.pdb ..\run_path\.
 )
 IF /I "%game%" EQU "1" (
-	cl %compile_options% ..\src\sn_main.c /LD /link %link_options% Kernel32.lib /EXPORT:Game_Init /EXPORT:Game_Tick /out:game_code.dll
+	cl %compile_options% ..\src\sn_main.c /LD /link %link_options% /EXPORT:Game_Init /EXPORT:Game_Tick /out:game_code.dll
 	del sn_main.obj
 	del sn_main.lib
 	del sn_main.exp
